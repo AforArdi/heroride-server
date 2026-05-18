@@ -29,7 +29,7 @@ const run =async ()=>{
           const result = await carsCollection.find().toArray();
           res.json(result);
         });
-        
+
         // getting popular 6 cars data
         app.get('/popular', async (req, res) => {
           const result = await carsCollection.find().limit(6).toArray();
@@ -40,6 +40,12 @@ const run =async ()=>{
         app.post('/reviews', async (req, res) => {
           const review = req.body;
           const result = await reviewsCollection.insertOne(review);
+          res.json(result);
+        });
+        
+        // getting all reviews data
+        app.get('/reviews', async (req, res) => {
+          const result = await reviewsCollection.find().toArray();
           res.json(result);
         });
 
