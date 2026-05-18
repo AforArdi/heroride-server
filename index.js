@@ -22,15 +22,24 @@ const run =async ()=>{
         await client.connect();
 
         const carsCollection = client.db("HERO_RIDE_DB").collection("cars");
+        const reviewsCollection = client.db("HERO_RIDE_DB").collection("reviews");
 
         // getting all cars data
         app.get('/cars', async (req, res) => {
           const result = await carsCollection.find().toArray();
           res.json(result);
         });
+        
         // getting popular 6 cars data
         app.get('/popular', async (req, res) => {
           const result = await carsCollection.find().limit(6).toArray();
+          res.json(result);
+        });
+
+        // inserting reviews data
+        app.post('/reviews', async (req, res) => {
+          const review = req.body;
+          const result = await reviewsCollection.insertOne(review);
           res.json(result);
         });
 
