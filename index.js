@@ -21,9 +21,22 @@ const run =async ()=>{
     try{
         await client.connect();
 
-        // opther database operation
+        const carsCollection = client.db("HERO_RIDE_DB").collection("cars");
 
-        await client.db("heroridedb").command({ ping: 1 });
+        // getting all cars data
+        app.get('/cars', async (req, res) => {
+          const result = await carsCollection.find().toArray();
+          res.json(result);
+        });
+        // getting popular 6 cars data
+        app.get('/popular', async (req, res) => {
+          const result = await carsCollection.find().limit(6).toArray();
+          res.json(result);
+        });
+
+
+
+        await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally{
         // await client.close();
