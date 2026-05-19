@@ -58,7 +58,7 @@ const run = async () => {
       res.json(result);
     });
 
-    // my bookings get
+    // getting my bookings
     app.get('/my-bookings/:userId', async (req, res) => {
       const { userId } = req.params;
       const result = await myBookingsCollection.find({ userId: userId }).toArray();
@@ -83,6 +83,14 @@ const run = async () => {
     app.post('/my-bookings', async (req, res) => {
       const data = req.body;
       const result = await myBookingsCollection.insertOne(data);
+      res.json(result);
+    })
+
+    // delete my bookings
+    app.delete('/my-bookings', async (req, res)=>{
+      const {id} = req.params;
+      const query = { _id: new ObjectId(id) };
+      const result = await myBookingsCollection.deleteOne(query);
       res.json(result);
     })
 
