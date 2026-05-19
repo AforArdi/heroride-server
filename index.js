@@ -3,7 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const PORT = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = process.env.MONGO_URI;
 
 app.use(cors());
@@ -27,6 +27,13 @@ const run =async ()=>{
         // getting all cars data
         app.get('/cars', async (req, res) => {
           const result = await carsCollection.find().toArray();
+          res.json(result);
+        });
+
+        // getting single car data
+        app.get('/cars/:id', async (req, res) => {
+          const {id} = req.params;
+          const result = await carsCollection.findOne({_id: new ObjectId(id)});
           res.json(result);
         });
 
