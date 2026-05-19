@@ -17,52 +17,66 @@ const client = new MongoClient(uri, {
   }
 });
 
-const run =async ()=>{
-    try{
-        await client.connect();
+const run = async () => {
+  try {
+    await client.connect();
 
-        const carsCollection = client.db("HERO_RIDE_DB").collection("cars");
-        const reviewsCollection = client.db("HERO_RIDE_DB").collection("reviews");
+    const carsCollection = client.db("HERO_RIDE_DB").collection("cars");
+    const reviewsCollection = client.db("HERO_RIDE_DB").collection("reviews");
+    const addedCarsCollection = client.db("HERO_RIDE_DB").collection("addedCars");
 
-        // getting all cars data
-        app.get('/cars', async (req, res) => {
-          const result = await carsCollection.find().toArray();
-          res.json(result);
-        });
+    // getting all cars data
+    app.get('/cars', async (req, res) => {
+      const result = await carsCollection.find().toArray();
+      res.json(result);
+    });
 
-        // getting single car data
-        app.get('/cars/:id', async (req, res) => {
-          const {id} = req.params;
-          const result = await carsCollection.findOne({_id: new ObjectId(id)});
-          res.json(result);
-        });
+    // getting single car data
+    app.get('/cars/:id', async (req, res) => {
+      const { id } = req.params;
+      const result = await carsCollection.findOne({ _id: new ObjectId(id) });
+      res.json(result);
+    });
 
-        // getting popular 6 cars data
-        app.get('/popular', async (req, res) => {
-          const result = await carsCollection.find().limit(6).toArray();
-          res.json(result);
-        });
+    // getting popular 6 cars data
+    app.get('/popular', async (req, res) => {
+      const result = await carsCollection.find().limit(6).toArray();
+      res.json(result);
+    });
 
-        // inserting reviews data
-        app.post('/reviews', async (req, res) => {
-          const review = req.body;
-          const result = await reviewsCollection.insertOne(review);
-          res.json(result);
-        });
-        
-        // getting all reviews data
-        app.get('/reviews', async (req, res) => {
-          const result = await reviewsCollection.find().toArray();
-          res.json(result);
-        });
+    // getting all reviews data
+    app.get('/reviews', async (req, res) => {
+      const result = await reviewsCollection.find().toArray();
+      res.json(result);
+    });
+
+    // getting user's added cars
+    app.get('/added-cars/:userId', async (req, res) => {
+      const { userId } = req.params;
+      const result = await addedCarsCollection.find({ userId: userId }).toArray();
+      res.json(result);
+    });
+
+    // inserting reviews data
+    app.post('/reviews', async (req, res) => {
+      const review = req.body;
+      const result = await reviewsCollection.insertOne(review);
+      res.json(result);
+    });
+
+    // inserting added cars data
+    app.post('/added-cars', async (req, res) => {
+      const addedCar = req.body;
+      const result = await addedCarsCollection.insertOne(addedCar);
+      res.json(result);
+    });
 
 
-
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    } finally{
-        // await client.close();
-    }
+    await client.db("admin").command({ ping: 1 });
+    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+  } finally {
+    // await client.close();
+  }
 }
 run().catch(console.dir);
 
