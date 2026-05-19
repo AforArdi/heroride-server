@@ -24,6 +24,7 @@ const run = async () => {
     const carsCollection = client.db("HERO_RIDE_DB").collection("cars");
     const reviewsCollection = client.db("HERO_RIDE_DB").collection("reviews");
     const addedCarsCollection = client.db("HERO_RIDE_DB").collection("addedCars");
+    const myBookingsCollection = client.db("HERO_RIDE_DB").collection("myBookings");
 
     // getting all cars data
     app.get('/cars', async (req, res) => {
@@ -57,6 +58,13 @@ const run = async () => {
       res.json(result);
     });
 
+    // my bookings get
+    app.get('/my-bookings/:userId', async (req, res) => {
+      const { userId } = req.params;
+      const result = await myBookingsCollection.find({ userId: userId }).toArray();
+      res.json(result);
+    });
+
     // inserting reviews data
     app.post('/reviews', async (req, res) => {
       const review = req.body;
@@ -70,6 +78,13 @@ const run = async () => {
       const result = await addedCarsCollection.insertOne(addedCar);
       res.json(result);
     });
+
+    // my bookings post
+    app.post('/my-bookings', async (req, res) => {
+      const data = req.body;
+      const result = await myBookingsCollection.insertOne(data);
+      res.json(result);
+    })
 
 
     await client.db("admin").command({ ping: 1 });
