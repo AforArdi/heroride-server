@@ -46,7 +46,20 @@ const run = async () => {
 
     // getting all cars data
     app.get('/cars', async (req, res) => {
-      const result = await carsCollection.find().toArray();
+      const { search } = req.query;
+
+      let cursor;
+
+      if (search) {
+        cursor = carsCollection.find({
+          $or: [
+            {
+              carName: { $regex: search, $options: 'i' }
+            },
+          ]
+        })
+      }
+      const result = await (cursor || carsCollection.find()).toArray();
       res.json(result);
     });
 
