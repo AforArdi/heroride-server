@@ -23,8 +23,8 @@ const run = async () => {
 
     const carsCollection = client.db("HERO_RIDE_DB").collection("cars");
     const reviewsCollection = client.db("HERO_RIDE_DB").collection("reviews");
-    const addedCarsCollection = client.db("HERO_RIDE_DB").collection("addedCars");
     const myBookingsCollection = client.db("HERO_RIDE_DB").collection("myBookings");
+    const addedCarsCollection = client.db("HERO_RIDE_DB").collection("myAddedCars");
 
     // getting all cars data
     app.get('/cars', async (req, res) => {
@@ -52,7 +52,7 @@ const run = async () => {
     });
 
     // getting user's added cars
-    app.get('/added-cars/:userId', async (req, res) => {
+    app.get('/my-added-cars/:userId', async (req, res) => {
       const { userId } = req.params;
       const result = await addedCarsCollection.find({ userId: userId }).toArray();
       res.json(result);
@@ -72,10 +72,10 @@ const run = async () => {
       res.json(result);
     });
 
-    // addedCars post
-    app.post('/added-cars', async (req, res) => {
-      const addedCar = req.body;
-      const result = await addedCarsCollection.insertOne(addedCar);
+    // myAddedCars post
+    app.post('/my-added-cars', async (req, res) => {
+      const data = req.body;
+      const result = await addedCarsCollection.insertOne(data);
       res.json(result);
     });
 
