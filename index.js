@@ -65,21 +65,21 @@ const run = async () => {
       res.json(result);
     });
 
-    // inserting reviews data
+    // reviews post
     app.post('/reviews', async (req, res) => {
       const review = req.body;
       const result = await reviewsCollection.insertOne(review);
       res.json(result);
     });
 
-    // inserting added cars data
+    // addedCars post
     app.post('/added-cars', async (req, res) => {
       const addedCar = req.body;
       const result = await addedCarsCollection.insertOne(addedCar);
       res.json(result);
     });
 
-    // my bookings post
+    // myBookings post
     app.post('/my-bookings', async (req, res) => {
       const data = req.body;
       const result = await myBookingsCollection.insertOne(data);
@@ -87,9 +87,9 @@ const run = async () => {
     })
 
     // delete my bookings
-    app.delete('/my-bookings', async (req, res)=>{
-      const {id} = req.params;
-      const query = { _id: new ObjectId(id) };
+    app.delete('/my-bookings/:carId', async (req, res)=>{
+      const {carId} = req.params;
+      const query = { _id: new ObjectId(carId) };
       const result = await myBookingsCollection.deleteOne(query);
       res.json(result);
     })
