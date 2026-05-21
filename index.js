@@ -52,7 +52,6 @@ const run = async () => {
       if (search) {
         query.carName = { $regex: search, $options: 'i' };
       }
-
       if (filter) {
         query.carType = filter;
       }
@@ -84,6 +83,9 @@ const run = async () => {
     app.get('/cars/:id', verifyJwtToken, async (req, res) => {
       const { id } = req.params;
       const result = await carsCollection.findOne({ _id: new ObjectId(id) });
+      if(!result){
+        return res.status(404).json({ message: 'Car not found' });
+      }
       res.json(result);
     });
 
