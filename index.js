@@ -46,24 +46,38 @@ const run = async () => {
 
     // getting all cars data
     app.get('/cars', async (req, res) => {
-      const { search, sort } = req.query;
-
-      let cursor;
+      const { search, filter } = req.query;
+      let query = {};
 
       if (search) {
-        cursor = carsCollection.find({
-          $or: [
-            {
-              carName: { $regex: search, $options: 'i' }
-            }
-          ]
-        })
+        query.carName = { $regex: search, $options: 'i' };
       }
-      if(sort){
-        cursor = carsCollection.find().sort({ carType: 1})
+
+      if (filter) {
+        query.carType = filter;
       }
-      const result = await (cursor || carsCollection.find()).toArray();
+
+      const cursor = carsCollection.find(query);
+      const result = await cursor.toArray();
+
       res.json(result);
+
+      // let cursor;
+
+      // if (search) {
+      //   cursor = carsCollection.find({
+      //     $or: [
+      //       {
+      //         carName: { $regex: search, $options: 'i' }
+      //       }
+      //     ]
+      //   })
+      // }
+      // if(sort){
+      //   cursor = carsCollection.find().sort({ carType: 1})
+      // }
+      // const result = await (cursor || carsCollection.find()).toArray();
+      // res.json(result);
     });
 
     // getting single car by id data
