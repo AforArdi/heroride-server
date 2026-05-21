@@ -131,6 +131,13 @@ const run = async () => {
     app.post('/my-bookings', verifyJwtToken, async (req, res) => {
       const data = req.body;
       const result = await myBookingsCollection.insertOne(data);
+
+      const query = { _id: new ObjectId(data.carId) };
+      const updateBookingCount = {
+        $inc: { bookingCount: 1 }
+      };
+      
+      await carsCollection.updateOne(query, updateBookingCount);
       res.json(result);
     })
 
@@ -138,11 +145,12 @@ const run = async () => {
     app.patch('/my-added-cars/:carId', verifyJwtToken, async (req, res) => {
       const { carId } = req.params;
       const updatedData = req.body;
-      const filter = { _id: new ObjectId(carId) };
+
+      const query = { _id: new ObjectId(carId) };
       const updateCar = {
-        $set: { ...updatedData }
+        $set: { ...updatedData },
       };
-      const result = await addedCarsCollection.updateOne(filter, updateCar);
+      const result = await addedCarsCollection.updateOne(query, updateCar);
       res.json(result);
     });
 
