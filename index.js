@@ -46,7 +46,7 @@ const run = async () => {
 
     // getting all cars data
     app.get('/cars', async (req, res) => {
-      const { search } = req.query;
+      const { search, sort } = req.query;
 
       let cursor;
 
@@ -55,9 +55,12 @@ const run = async () => {
           $or: [
             {
               carName: { $regex: search, $options: 'i' }
-            },
+            }
           ]
         })
+      }
+      if(sort){
+        cursor = carsCollection.find().sort({ carType: 1})
       }
       const result = await (cursor || carsCollection.find()).toArray();
       res.json(result);
