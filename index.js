@@ -37,7 +37,7 @@ const verifyJwtToken = async (req, res, next) => {
 
 const run = async () => {
   try {
-    await client.connect();
+    // await client.connect();
 
     const carsCollection = client.db("HERO_RIDE_DB").collection("cars");
     const reviewsCollection = client.db("HERO_RIDE_DB").collection("reviews");
@@ -87,7 +87,7 @@ const run = async () => {
       if (!ObjectId.isValid(id)) {
         return res.status(400).json({ error: 'Invalid ID format' });
       }
-      
+
       const result = await carsCollection.findOne({ _id: new ObjectId(id) });
       if (!result) {
         return res.status(404).json({ message: 'Car not found' });
@@ -179,7 +179,7 @@ const run = async () => {
     })
 
 
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
     // await client.close();
