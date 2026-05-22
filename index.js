@@ -82,8 +82,14 @@ const run = async () => {
     // getting single car by id data
     app.get('/cars/:id', verifyJwtToken, async (req, res) => {
       const { id } = req.params;
+
+      // id validation with help
+      if (!ObjectId.isValid(id)) {
+        return res.status(400).json({ error: 'Invalid ID format' });
+      }
+      
       const result = await carsCollection.findOne({ _id: new ObjectId(id) });
-      if(!result){
+      if (!result) {
         return res.status(404).json({ message: 'Car not found' });
       }
       res.json(result);
@@ -138,7 +144,7 @@ const run = async () => {
       const updateBookingCount = {
         $inc: { bookingCount: 1 }
       };
-      
+
       await carsCollection.updateOne(query, updateBookingCount);
       res.json(result);
     })
