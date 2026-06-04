@@ -1,7 +1,5 @@
 # HeroRide Backend Server
 
-**Main App:** [https://heroride.vercel.app](https://heroride.vercel.app)
-
 ## About
 
 Backend API server for the HeroRide application built with Express.js and MongoDB.
